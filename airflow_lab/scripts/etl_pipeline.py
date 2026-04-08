@@ -8,42 +8,42 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-def validate_data(df):
+FILE_PATH = "/opt/airflow/data/big_dataset.csv"
 
-    logging.info("validando qualidade dos dados")
+def extract():
+
+    if not os.path.exists(FILE_PATH):
+        raise FileNotFoundError(f"{FILE_PATH} não encontrado")
+
+    logging.info("extraindo dados")
+
+    df = pd.read_csv(FILE_PATH)
+
+    return df.to_json()
+
+
+def transform(df_json):
+
+    logging.info("transformando dados")
+
+    df = pd.read_json(df_json)
 
     if df.empty:
         raise ValueError("dataset vazio")
 
-    if df["valor"].isnull().any():
-        raise ValueError("coluna valor contém nulos")
-
     if (df["valor"] < 0).any():
-        raise ValueError("valores negativos encontrados")
-
-    logging.info("dados validados com sucesso")
-
-
-def run_pipeline():
-
-    file_path = "/opt/airflow/data/big_dataset.csv"
-
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"{file_path} não encontrado")
-
-    logging.info("iniciando extração")
-
-    df = pd.read_csv(file_path)
-
-    logging.info(f"{len(df)} registros encontrados")
-
-    validate_data(df)
-
-    logging.info("iniciando transformação")
+        raise ValueError("valor negativo encontrado")
 
     df["valor_ajustado"] = df["valor"] * 1.1
 
-    logging.info("carregando dados no postgres")
+    return df.to_json()
+
+
+def load(df_json):
+
+    logging.info("carregando dados")
+
+    df = pd.read_json(df_json)
 
     engine = create_engine(
         "postgresql+psycopg2://airflow:airflow@postgres:5432/airflow"
@@ -56,4 +56,7 @@ def run_pipeline():
         index=False
     )
 
-    logging.info("pipeline finalizado com sucesso")
+    logging.info("carga concluída")
+engine = create_engine(
+    f"postgresql+psycopg2://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{os.getenv('POSTGRES_HOST')}:{os.getenv('POSTGRES_PORT')}/{os.getenv('POSTGRES_DB')}"
+)

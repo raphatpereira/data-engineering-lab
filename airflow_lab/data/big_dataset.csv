@@ -1,6 +1,6 @@
-id,nome,valor
-1,ana,100
-2,bruno,-200
-3,carla,150
-4,daniel,300
-5,erika,250
+id,nome,valor,data
+1,ana,100,2024-01-01
+2,bruno,200,2024-01-02
+3,carla,150,2024-01-03
+4,daniel,300,2024-01-04
+5,erika,250,2024-01-05
