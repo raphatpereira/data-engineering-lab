@@ -1,37 +1,50 @@
 # Data Engineering Lab
 
-Laboratório prático de Engenharia de Dados com foco em construção de pipelines ETL reproduzíveis.
+Projeto prático de engenharia de dados usando Airflow + Docker + Postgres.
 
-## Stack
+## arquitetura
+
+Airflow orquestra pipeline ETL:
+
+CSV -> Pandas -> PostgreSQL
+
+## stack
 
 - Apache Airflow
 - Docker
 - PostgreSQL
-- Python
-- Git
+- Python (pandas, sqlalchemy)
+- Git / GitHub
 
-## Projeto 1 — Pipeline ETL local
+## pipeline
 
-Pipeline orquestrado pelo Airflow que:
+1 extração de dados CSV
+2 transformação de dados
+3 carga no banco postgres
 
-1. Extrai dados
-2. Transforma dados
-3. Carrega no PostgreSQL
-
-## Como executar
-
-subir containers:
+## execução
 
 docker compose up -d
 
-acessar airflow:
+abrir:
 
 http://localhost:8080
 
-## Objetivo
+usuario:
+airflow
 
-construir base sólida para evolução em:
+senha:
+airflow
 
-- pipelines escaláveis
-- modelagem de dados
-- orquestração de workflows
+## estrutura
+
+airflow_lab/
+
+dags/ → orquestração
+scripts/ → lógica ETL
+data/ → dados de entrada
+logs/ → logs airflow
+
+## objetivo
+
+construir base sólida em engenharia de dados moderna
