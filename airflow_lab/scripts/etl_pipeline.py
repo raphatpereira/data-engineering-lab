@@ -34,6 +34,15 @@ def transform(df_json):
     if (df["valor"] < 0).any():
         raise ValueError("valor negativo encontrado")
 
+    # converter coluna de data
+    df["data"] = pd.to_datetime(df["data"])
+
+    # filtro incremental
+    data_limite = "2024-01-03"
+
+    df = df[df["data"] > data_limite]
+
+    # transformação principal
     df["valor_ajustado"] = df["valor"] * 1.1
 
     return df.to_json()
